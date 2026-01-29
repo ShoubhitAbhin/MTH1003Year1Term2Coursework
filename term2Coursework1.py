@@ -145,7 +145,7 @@ yVals = [s[1] for s in trajectory]
 
 plt.figure()
 plt.plot(xNum, yNum, label="Euler (no drag)")
-plt.plot(xExact, yExact, '--', label="Analytical (no drag)")
+plt.plot(xExact, yExact, label="Analytical (no drag)")
 plt.xlabel("x (m)")
 plt.ylabel("y (m)")
 plt.title("Comparison of numerical and analytical solutions (no drag)")
@@ -197,7 +197,7 @@ while y > 0:
 
 # Plot trajectory
 
-plt.plot(xListQuestion2, yListQuestion2, label = "CHANGE THIS")
+plt.plot(xListQuestion2, yListQuestion2, label = "Euler (with drag)")
 plt.xlabel('x (m)')
 plt.ylabel('y (m)')
 plt.title('Projectile Motion')
