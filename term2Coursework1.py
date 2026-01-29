@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+#############
+# QUESTION 1 
+#############
+
 N = 21 # group number
 m = (40+N) * 1e-3 # mass of tennis ball
 g = 9.81 # gravitational acceleration
@@ -51,7 +55,7 @@ while y > 0:
 
 # -------------------
 
-# function defining the ode system
+# function defining the ODE system
 def derivatives(state):
     x, y, vx, vy = state
 
@@ -65,7 +69,16 @@ def derivatives(state):
 
     return dxdt, dydt, ax, ay
 
-# eulers step function 
+# drag-free derivatives (for analytical comparison)
+def derivativesNoDrag(state):
+    x, y, vx, vy = state
+    dxdt = vx
+    dydt = vy
+    dvxdt = 0
+    dvydt = -g
+    return dxdt, dydt, dvxdt, dvydt
+
+# Eulers step function 
 def eulerStep(state, h):
     dxdt, dydt, dvxdt, dvydt = derivatives(state)
 
@@ -78,7 +91,39 @@ def eulerStep(state, h):
 
     return xNew, yNew, vxNew, vyNew
 
-# time loop
+# Euler step without drag
+def eulerStepNoDrag(state, h):
+    dxdt, dydt, dvxdt, dvydt = derivativesNoDrag(state)
+    x, y, vx, vy = state
+    xNew  = x  + h * dxdt
+    yNew  = y  + h * dydt
+    vxNew = vx + h * dvxdt
+    vyNew = vy + h * dvydt
+    return xNew, yNew, vxNew, vyNew
+
+# -------------------
+# Q1: Drag-free numerical vs analytical solution
+
+stateNoDrag = (0, Hball, V * np.cos(alpha), V * np.sin(alpha))
+trajectoryNoDrag = []
+timeVals = []
+
+t = 0
+while stateNoDrag[1] > 0:
+    trajectoryNoDrag.append(stateNoDrag)
+    timeVals.append(t)
+    stateNoDrag = eulerStepNoDrag(stateNoDrag, h)
+    t += h
+
+xNum = np.array([s[0] for s in trajectoryNoDrag])
+yNum = np.array([s[1] for s in trajectoryNoDrag])
+
+# analytical solution
+timeVals = np.array(timeVals)
+xExact = V * np.cos(alpha) * timeVals
+yExact = Hball + V * np.sin(alpha) * timeVals - 0.5 * g * timeVals**2
+
+# drag trajectory calculation (unchanged)
 state = (x, y, vxOft, vyOft)
 
 while state[1] > 0:
@@ -96,15 +141,21 @@ while state[1] > 0:
     state = eulerStep(state, h)
 
 # convert to arrays
-x_vals = [s[0] for s in trajectory]
-y_vals = [s[1] for s in trajectory]
+xVals = [s[0] for s in trajectory]
+yVals = [s[1] for s in trajectory]
 
-plt.plot(x_vals, y_vals)
+plt.figure()
+plt.plot(xNum, yNum, label="Euler (no drag)")
+plt.plot(xExact, yExact, '--', label="Analytical (no drag)")
 plt.xlabel("x (m)")
 plt.ylabel("y (m)")
-plt.title("Tennis ball trajectory with drag")
+plt.title("Comparison of numerical and analytical solutions (no drag)")
+plt.legend()
 plt.grid(True)
 plt.show()
 
 
 
+#############
+# QUESTION 2 
+#############
