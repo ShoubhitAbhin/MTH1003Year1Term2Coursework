@@ -1,7 +1,6 @@
-import math
 import matplotlib.pyplot as plt
 import numpy as np
-
+import math
 
 #############
 # QUESTION 1 
@@ -152,10 +151,57 @@ plt.ylabel("y (m)")
 plt.title("Comparison of numerical and analytical solutions (no drag)")
 plt.legend()
 plt.grid(True)
-plt.show()
+plt.savefig("Question1.png")
+
 
 
 
 #############
 # QUESTION 2 
 #############
+
+
+# new parameters for question 2
+T = 1.5 # final time 
+dt = 0.001 # timestep 
+
+
+# initial conditions
+
+t = 0
+x = 0
+y = Hball
+vx = V*math.cos(alpha)
+vy = V*math.sin(alpha)
+
+xListQuestion2 = [x]
+yListQuestion2 = [y]
+
+
+# Forward Euler scheme
+
+while y > 0:
+    v = math.sqrt(vx**2 + vy**2)
+
+    ax = -(0.5*Cd*p*A/m)*v*vx
+    ay = -g - (0.5*Cd*p*A/m)*v*vy
+
+    x = x + dt*vx
+    y = y + dt*vy
+
+    vx = vx + dt*ax
+    vy = vy + dt*ay
+
+    xListQuestion2.append(x)
+    yListQuestion2.append(y)
+
+# Plot trajectory
+
+plt.plot(xListQuestion2, yListQuestion2, label = "CHANGE THIS")
+plt.xlabel('x (m)')
+plt.ylabel('y (m)')
+plt.title('Projectile Motion')
+plt.legend()
+plt.grid(True)
+plt.savefig("Question2.png")
+
