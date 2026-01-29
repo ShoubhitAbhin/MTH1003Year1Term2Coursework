@@ -205,3 +205,10 @@ plt.legend()
 plt.grid(True)
 plt.savefig("Question2.png")
 
+
+
+
+#############
+# QUESTION 3
+#############
+
