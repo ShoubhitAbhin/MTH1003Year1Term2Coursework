@@ -18,7 +18,7 @@ Hball = 0.8 # initial height of the ball
 L = 11.9 # distance from the baseline to the net
 Hnet = 0.9 # net height
 
-alpha = np.radians(30) # angle in radians - should be changed based on initial conditions
+alpha = math.radians(15) # angle in radians - should be changed based on initial conditions
 # alpha = np.degrees(45)
 V = 20 # initial velocity - should be changed based on intial conditions
 
@@ -359,11 +359,9 @@ kM = 0.5 * R * Cl * A / m
 print("kM", kM)
  
 # int conditions
-v0= 30 #m/s
-alpha= 5* np.pi /180
 x0, y0= 0.0, 0.8
-vx0= v0 * np.cos(alpha)
-vy0= v0 * np.sin(alpha)
+vx0= V * np.cos(alpha)
+vy0= V * np.sin(alpha)
  
 #time
 dt= 0.001
@@ -416,10 +414,23 @@ y = y[:n+1]
  
 
 plt.clf()
-plt.plot(x, y)
-plt.axhline(0.9, linestyle='--')   # net height
-plt.axvline(11.9, linestyle='--')  # net position
-plt.xlabel("x (m)")
-plt.ylabel("y (m)")
-plt.savefig("bweiufgkr.png")
+plt.figure()
+plt.plot(xNum, yNum, label="Euler (no drag)")
+plt.plot(xListQuestion2, yListQuestion2, label = "Euler (with drag)")
+plt.xlabel('x (m)')
+plt.ylabel('y (m)')
+plt.title('Projectile Motion')
+plt.legend()
+plt.grid(True)
+
+####
+plt.plot(x, y, label = "Magnus Effect")
+# plt.axhline(0.9, linestyle='--', label = "Net Height")   # net height
+# plt.axvline(11.9, linestyle='--', label = "Net Position")  # net position
+point1 = [11.9,11.9]
+point2 = [0.0,0.9]
+plt.plot(point1,point2,linestyle = "-", linewidth = 2, label = "Net", color = '#000000')
+plt.legend()
+plt.grid(True)
+plt.savefig("question4wquestion2.png")
  
