@@ -427,7 +427,7 @@ point2 = [0.0,0.9]
 plt.plot(point1,point2,linestyle = "-", linewidth = 2, label = "Net", color = '#000000')
 plt.legend()
 plt.grid(True)
-plt.savefig("Question4-AllGraphsOnOnePlot.png")
+plt.savefig("V20Alpha15Deg.png")
 
 
 """
