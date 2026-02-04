@@ -414,7 +414,7 @@ plt.plot(xNum, yNum, label="Euler (no drag)")
 plt.plot(xListQuestion2, yListQuestion2, label = "Euler (with drag)")
 plt.xlabel('x (m)')
 plt.ylabel('y (m)')
-plt.title('Projectile Motion With The Magnus Effect')
+plt.title('Projectile Motion With The Magnus Effect (V=20m/s, Angle= 15°)')
 plt.legend()
 plt.grid(True)
 
@@ -428,6 +428,7 @@ plt.plot(point1,point2,linestyle = "-", linewidth = 2, label = "Net", color = '#
 plt.legend()
 plt.grid(True)
 plt.savefig("V20Alpha15Deg.png")
+
 
 
 """
