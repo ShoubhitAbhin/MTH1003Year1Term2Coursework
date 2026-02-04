@@ -341,22 +341,17 @@ print("Notice how the error might flatten or spike at the far left (tiny h) and 
 
 
 
-# ----
- 
-####imports####
-import numpy as np
-import matplotlib.pyplot as plt
+
+#############
+# QUESTION 4
+#############
+
 # base values
-N=21 #(group 21)
-m= 0.061          # kg
-g= 9.81           # m/s^2
-C= 0.5
-R= 1.2
-A= 1.9e-3         # m^2
+
 omega = 20  # rad/s (negative = topspin, positive = backspin)
 Cl = 0.2     # lift coefficient
-kM = 0.5 * R * Cl * A / m
-print("kM", kM)
+kM = 0.5 * p * Cl * A / m   # magnus coupling constant
+# print("kM", kM)
  
 # int conditions
 x0, y0= 0.0, 0.8
@@ -388,8 +383,8 @@ while y[n] > 0 and n < Nmax - 1:
  
     v = np.sqrt(vx[n]**2 + vy[n]**2)
  
-    ax = -(0.5*C*R*A/m) * v * vx[n]
-    ay = -g -(0.5*C*R*A/m) * v * vy[n]
+    ax = -(0.5*Cd*p*A/m) * v * vx[n]
+    ay = -g -(0.5*Cd*p*A/m) * v * vy[n]
     ax_mag = -kM * omega * vy[n]
     ay_mag = kM * omega * vx[n]
     ax_total = ax + ax_mag
@@ -419,7 +414,7 @@ plt.plot(xNum, yNum, label="Euler (no drag)")
 plt.plot(xListQuestion2, yListQuestion2, label = "Euler (with drag)")
 plt.xlabel('x (m)')
 plt.ylabel('y (m)')
-plt.title('Projectile Motion')
+plt.title('Projectile Motion With The Magnus Effect')
 plt.legend()
 plt.grid(True)
 
@@ -432,5 +427,134 @@ point2 = [0.0,0.9]
 plt.plot(point1,point2,linestyle = "-", linewidth = 2, label = "Net", color = '#000000')
 plt.legend()
 plt.grid(True)
-plt.savefig("question4wquestion2.png")
- 
+plt.savefig("Question4-AllGraphsOnOnePlot.png")
+
+
+"""
+#############
+# QUESTION 4 – MAGNUS EFFECT - SHOUBHIT
+#############
+
+# In this question we extend the projectile model to include spin.
+# A spinning ball experiences a lift force (Magnus force) perpendicular
+# to its velocity, which alters the trajectory.
+
+# ---------------------------
+# Magnus effect parameters
+# ---------------------------
+
+omega = 20            # angular velocity (rad/s)
+                      # omega > 0 corresponds to backspin
+Cl = 0.2              # lift coefficient (dimensionless)
+
+# Magnus coupling constant
+# This collects all constants appearing in the Magnus acceleration
+# a_M = kM * omega * v_perp
+kM = 0.5 * p * Cl * A / m
+
+
+# ---------------------------
+# Initial conditions
+# ---------------------------
+
+x0 = 0.0
+y0 = Hball
+vx0 = V * np.cos(alpha)
+vy0 = V * np.sin(alpha)
+
+
+# ---------------------------
+# Time discretisation
+# ---------------------------
+
+dt = 0.001            # timestep (small for stability and accuracy)
+Nmax = 100000         # maximum number of timesteps (safety limit)
+
+
+# ---------------------------
+# Allocate arrays
+# ---------------------------
+
+x = np.zeros(Nmax)
+y = np.zeros(Nmax)
+vx = np.zeros(Nmax)
+vy = np.zeros(Nmax)
+t = np.zeros(Nmax)
+
+# Set initial values
+x[0], y[0] = x0, y0
+vx[0], vy[0] = vx0, vy0
+
+
+# ---------------------------
+# Forward Euler time stepping
+# ---------------------------
+
+n = 0
+while y[n] > 0 and n < Nmax - 1:
+    
+    # Speed magnitude
+    v = np.sqrt(vx[n]**2 + vy[n]**2)
+    
+    # ---------------------------
+    # Drag acceleration components
+    # ---------------------------
+    ax_drag = -(0.5 * Cd * p * A / m) * v * vx[n]
+    ay_drag = -g - (0.5 * Cd * p * A / m) * v * vy[n]
+    
+    # ---------------------------
+    # Magnus acceleration components
+    # ---------------------------
+    # Force is perpendicular to velocity
+    ax_magnus = -kM * omega * vy[n]
+    ay_magnus =  ax_magnus * 0 + kM * omega * vx[n]
+    
+    # ---------------------------
+    # Total acceleration
+    # ---------------------------
+    ax_total = ax_drag + ax_magnus
+    ay_total = ay_drag + ay_magnus
+    
+    # ---------------------------
+    # Euler updates
+    # ---------------------------
+    x[n+1]  = x[n]  + vx[n] * dt
+    y[n+1]  = y[n]  + vy[n] * dt
+    vx[n+1] = vx[n] + ax_total * dt
+    vy[n+1] = vy[n] + ay_total * dt
+    
+    t[n+1]  = t[n]  + dt
+    n += 1
+
+
+# Trim arrays to actual length
+x = x[:n+1]
+y = y[:n+1]
+
+
+# ---------------------------
+# Plot results
+# ---------------------------
+
+plt.clf()
+plt.figure()
+
+# Previous trajectories for comparison
+plt.plot(xNum, yNum, label="Euler (no drag)")
+plt.plot(xListQuestion2, yListQuestion2, label="Euler (with drag)")
+
+# Magnus trajectory
+plt.plot(x, y, label="With Magnus Effect")
+
+# Net representation
+plt.axhline(0.9, linestyle="--", linewidth=1)
+plt.axvline(11.9, linestyle="--", linewidth=1)
+plt.text(11.9, 0.95, "Net", ha="center")
+
+plt.xlabel("x (m)")
+plt.ylabel("y (m)")
+plt.title("Projectile Motion with Magnus Effect")
+plt.legend()
+plt.grid(True)
+plt.savefig("Question4Shoubhit.png")
+"""
